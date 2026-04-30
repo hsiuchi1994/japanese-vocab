@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>今日の日本語単語 2026/04/30</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, 'Hiragino Sans', sans-serif; background: #f5f5f7; min-height: 100vh; }
+
+  .header { background: #fff; padding: 16px 20px 0; border-bottom: 1px solid #eee; position: sticky; top: 0; z-index: 10; }
+  .header-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+  .date { font-size: 13px; color: #888; }
+  .title { font-size: 16px; font-weight: 700; color: #1a1a1a; }
+  .quit-btn { font-size: 13px; color: #888; cursor: pointer; }
+
+  .progress-bar { height: 4px; background: #e8e8e8; border-radius: 2px; }
+  .progress-fill { height: 100%; background: #4CAF50; border-radius: 2px; transition: width 0.3s; }
+
+  .mode-tabs { display: flex; margin: 0 -20px; border-top: 1px solid #eee; }
+  .tab { flex: 1; text-align: center; padding: 10px; font-size: 13px; color: #888; cursor: pointer; border-bottom: 2px solid transparent; }
+  .tab.active { color: #4CAF50; border-bottom-color: #4CAF50; font-weight: 600; }
+
+  .content { padding: 20px; max-width: 480px; margin: 0 auto; }
+
+  /* Study Mode */
+  .card { background: #fff; border-radius: 20px; padding: 32px 24px 24px; text-align: center; box-shadow: 0 2px 12px rgba(0,0,0,0.06); margin-bottom: 16px; }
+  .card-kanji { font-size: 52px; font-weight: 900; color: #1a1a1a; line-height: 1.2; margin-bottom: 6px; }
+  .card-reading { font-size: 22px; color: #555; margin-bottom: 6px; }
+  .card-pos { font-size: 12px; color: #4CAF50; background: #e8f5e9; padding: 2px 10px; border-radius: 20px; display: inline-block; margin-bottom: 14px; }
+  .card-meaning { font-size: 18px; color: #333; font-weight: 500; }
+
+  .audio-btn { display: flex; align-items: center; justify-content: center; gap: 6px; margin: 14px auto; background: #fff; border: 1.5px solid #ddd; border-radius: 24px; padding: 8px 20px; font-size: 14px; color: #555; cursor: pointer; width: fit-content; transition: all 0.15s; }
+  .audio-btn:active { background: #f0f0f0; }
+  .audio-btn svg { width: 16px; height: 16px; fill: #4CAF50; }
+
+  /* Info sections */
+  .info-section { background: #fff; border-radius: 16px; padding: 16px; margin-bottom: 12px; box-shadow: 0 1px 6px rgba(0,0,0,0.05); }
+  .info-label { font-size: 11px; font-weight: 700; color: #aaa; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 10px; }
+  .sentence-item { font-size: 14px; color: #444; line-height: 1.7; padding: 8px 12px; background: #f9fafb; border-radius: 10px; margin-bottom: 6px; }
+  .sentence-item:last-child { margin-bottom: 0; }
+  .related-item { font-size: 14px; color: #555; padding: 6px 0; border-bottom: 1px solid #f0f0f0; }
+  .related-item:last-child { border-bottom: none; }
+  .empty-note { font-size: 13px; color: #bbb; font-style: italic; }
+
+  .nav-btns { display: flex; gap: 12px; margin-top: 4px; }
+  .nav-btn { flex: 1; padding: 14px; border-radius: 14px; font-size: 15px; font-weight: 600; cursor: pointer; border: none; transition: all 0.15s; }
+  .nav-prev { background: #f0f0f0; color: #555; }
+  .nav-next { background: #4CAF50; color: #fff; }
+  .nav-btn:disabled { opacity: 0.4; cursor: default; }
+  .nav-next.quiz-start { background: #FF9800; }
+
+  /* Quiz Mode */
+  .quiz-question { font-size: 15px; color: #888; margin-bottom: 16px; text-align: center; }
+  .quiz-kanji { font-size: 56px; font-weight: 900; text-align: center; margin-bottom: 8px; }
+  .quiz-meaning { font-size: 16px; color: #555; text-align: center; margin-bottom: 24px; }
+  .choices { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
+  .choice-btn { padding: 18px 10px; background: #fff; border: 2px solid #e8e8e8; border-radius: 14px; font-size: 18px; cursor: pointer; text-align: center; transition: all 0.15s; color: #1a1a1a; }
+  .choice-btn:active { transform: scale(0.97); }
+  .choice-btn.correct { background: #e8f5e9; border-color: #4CAF50; color: #2E7D32; }
+  .choice-btn.wrong { background: #fce4ec; border-color: #e53935; color: #c62828; }
+  .choice-btn.show-answer { background: #e8f5e9; border-color: #4CAF50; }
+
+  /* Score */
+  .score-card { background: #fff; border-radius: 20px; padding: 48px 24px; text-align: center; box-shadow: 0 2px 12px rgba(0,0,0,0.06); }
+  .score-emoji { font-size: 64px; margin-bottom: 16px; }
+  .score-title { font-size: 22px; font-weight: 700; margin-bottom: 8px; }
+  .score-num { font-size: 48px; font-weight: 900; color: #4CAF50; margin-bottom: 4px; }
+  .score-sub { font-size: 15px; color: #888; margin-bottom: 32px; }
+  .restart-btn { background: #4CAF50; color: #fff; border: none; border-radius: 14px; padding: 16px 40px; font-size: 16px; font-weight: 600; cursor: pointer; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-top">
+    <span class="date">2026/04/30（木曜日）</span>
+    <span class="title">📚 今日の単語</span>
+    <span class="quit-btn" onclick="history.back()">やめる</span>
+  </div>
+  <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:10%"></div></div>
+  <div class="mode-tabs">
+    <div class="tab active" id="tabStudy" onclick="switchMode('study')">學習模式</div>
+    <div class="tab" id="tabQuiz" onclick="switchMode('quiz')">測驗模式</div>
+  </div>
+</div>
+
+<div class="content" id="studyContent">
+  <div class="card">
+    <div class="card-kanji" id="sKanji"></div>
+    <div class="card-reading" id="sReading"></div>
+    <span class="card-pos" id="sPos"></span>
+    <br><br>
+    <div class="card-meaning" id="sMeaning"></div>
+  </div>
+
+  <button class="audio-btn" onclick="speak()">
+    <svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/></svg>
+    點擊聽發音
+  </button>
+
+  <div class="info-section">
+    <div class="info-label">常用句子</div>
+    <div id="sSentences"></div>
+  </div>
+
+  <div class="info-section">
+    <div class="info-label">相關字</div>
+    <div id="sRelated"></div>
+  </div>
+
+  <div class="nav-btns">
+    <button class="nav-btn nav-prev" id="prevBtn" onclick="prevCard()" disabled>← 上一個</button>
+    <button class="nav-btn nav-next" id="nextBtn" onclick="nextCard()">下一個 →</button>
+  </div>
+</div>
+
+<div class="content" id="quizContent" style="display:none">
+  <div id="quizArea">
+    <p class="quiz-question">正確的讀音是哪個？ <span id="qProgress"></span></p>
+    <div class="quiz-kanji" id="qKanji"></div>
+    <div class="quiz-meaning" id="qMeaning"></div>
+    <div class="choices" id="choicesArea"></div>
+    <button class="audio-btn" onclick="speak()" style="margin:0 auto 16px">
+      <svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/></svg>
+      聽發音
+    </button>
+  </div>
+  <div id="scoreArea" style="display:none">
+    <div class="score-card">
+      <div class="score-emoji" id="scoreEmoji"></div>
+      <div class="score-title">測驗完成！</div>
+      <div class="score-num" id="scoreNum"></div>
+      <div class="score-sub" id="scoreSub"></div>
+      <button class="restart-btn" onclick="restartQuiz()">再來一次</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const words = [{"kanji": "愛情", "reading": "あいじょう", "pos": "名", "meaning": "愛，愛情；熱愛", "sentences": ["母の愛情（母愛）"], "related": [], "choices": ["あいじょう", "えんしゅう", "あむ", "いまごろ"], "answer": "あいじょう"}, {"kanji": "赤字", "reading": "あかじ", "pos": "名", "meaning": "赤字，虧空", "sentences": [], "related": ["↔ 反義：黒字 （くろじ）（盈餘）"], "choices": ["いっしゅ", "あかじ", "いじ", "いっすい"], "answer": "あかじ"}, {"kanji": "明かり", "reading": "あかり", "pos": "名", "meaning": "光亮；燈火", "sentences": ["明かりを消す（滅燈）"], "related": [], "choices": ["あかり", "あらし", "いざかや", "あっしゅく"], "answer": "あかり"}, {"kanji": "悪天候", "reading": "あくてんこう", "pos": "名", "meaning": "壞天氣", "sentences": [], "related": [], "choices": ["いずみ", "えんやす", "うちあわせ", "あくてんこう"], "answer": "あくてんこう"}, {"kanji": "悪魔", "reading": "あくま", "pos": "名", "meaning": "惡魔，魔鬼", "sentences": [], "related": ["↔ 反義：天使 （てんし）（天使）"], "choices": ["うれゆき", "いんたい", "あくま", "あおぐ"], "answer": "あくま"}, {"kanji": "明け方", "reading": "あけがた", "pos": "名", "meaning": "黎明，拂曉", "sentences": [], "related": ["↔ 反義：夕方 （ゆうがた）（傍晚）"], "choices": ["あん", "あらたな", "あけがた", "あいじょう"], "answer": "あけがた"}, {"kanji": "圧縮", "reading": "あっしゅく", "pos": "名·他サ", "meaning": "壓縮", "sentences": [], "related": [], "choices": ["あいついで", "あらし", "あっしゅく", "おうえん"], "answer": "あっしゅく"}, {"kanji": "宛名", "reading": "あてな", "pos": "名", "meaning": "收信人姓名（地址）", "sentences": [], "related": [], "choices": ["いんよう", "いっしゅ", "えんとつ", "あてな"], "answer": "あてな"}, {"kanji": "跡", "reading": "あと", "pos": "名", "meaning": "痕跡；行蹤", "sentences": ["跡を追う（追趕；效仿）"], "related": ["▸ 複合：足跡 （あしあと）（足跡）"], "choices": ["あくる", "あと", "えんとつ", "えいせい"], "answer": "あと"}, {"kanji": "穴", "reading": "あな", "pos": "名", "meaning": "孔，眼；洞", "sentences": ["鼻の穴（鼻孔）", "穴があれば入りたい（想找個地洞鑽進去）"], "related": [], "choices": ["あむ", "あな", "いてん", "あきっぽい"], "answer": "あな"}];
+let studyIdx = 0;
+let quizIdx = 0;
+let score = 0;
+let answered = false;
+let mode = 'study';
+
+function switchMode(m) {
+  mode = m;
+  document.getElementById('studyContent').style.display = m === 'study' ? 'block' : 'none';
+  document.getElementById('quizContent').style.display = m === 'quiz' ? 'block' : 'none';
+  document.getElementById('tabStudy').className = 'tab' + (m === 'study' ? ' active' : '');
+  document.getElementById('tabQuiz').className = 'tab' + (m === 'quiz' ? ' active' : '');
+  if (m === 'quiz') renderQuiz();
+}
+
+function updateProgress(idx, total) {
+  document.getElementById('progressFill').style.width = ((idx + 1) / total * 100) + '%';
+}
+
+function renderStudy() {
+  const w = words[studyIdx];
+  document.getElementById('sKanji').textContent = w.kanji;
+  document.getElementById('sReading').textContent = w.reading;
+  document.getElementById('sPos').textContent = w.pos || '—';
+  document.getElementById('sMeaning').textContent = w.meaning;
+
+  const sentDiv = document.getElementById('sSentences');
+  if (w.sentences && w.sentences.length > 0) {
+    sentDiv.innerHTML = w.sentences.map(s => `<div class="sentence-item">📝 ${s}</div>`).join('');
+  } else {
+    sentDiv.innerHTML = '<span class="empty-note">（PDF 中無例句）</span>';
+  }
+
+  const relDiv = document.getElementById('sRelated');
+  if (w.related && w.related.length > 0) {
+    relDiv.innerHTML = w.related.map(r => `<div class="related-item">${r}</div>`).join('');
+  } else {
+    relDiv.innerHTML = '<span class="empty-note">（無相關字）</span>';
+  }
+
+  document.getElementById('prevBtn').disabled = studyIdx === 0;
+  const nextBtn = document.getElementById('nextBtn');
+  if (studyIdx === words.length - 1) {
+    nextBtn.textContent = '開始測驗 →';
+    nextBtn.className = 'nav-btn nav-next quiz-start';
+  } else {
+    nextBtn.textContent = '下一個 →';
+    nextBtn.className = 'nav-btn nav-next';
+  }
+  updateProgress(studyIdx, words.length);
+}
+
+function prevCard() {
+  if (studyIdx > 0) { studyIdx--; renderStudy(); }
+}
+
+function nextCard() {
+  if (studyIdx < words.length - 1) { studyIdx++; renderStudy(); }
+  else { switchMode('quiz'); }
+}
+
+function speak() {
+  const w = words[mode === 'study' ? studyIdx : quizIdx];
+  const utt = new SpeechSynthesisUtterance(w.kanji);
+  utt.lang = 'ja-JP';
+  utt.rate = 0.85;
+  speechSynthesis.cancel();
+  speechSynthesis.speak(utt);
+}
+
+function renderQuiz() {
+  if (quizIdx >= words.length) { showScore(); return; }
+  const w = words[quizIdx];
+  document.getElementById('qProgress').textContent = `${quizIdx + 1}/${words.length}`;
+  document.getElementById('qKanji').textContent = w.kanji;
+  document.getElementById('qMeaning').textContent = w.meaning;
+  updateProgress(quizIdx, words.length);
+  answered = false;
+
+  const area = document.getElementById('choicesArea');
+  area.innerHTML = '';
+  w.choices.forEach(c => {
+    const btn = document.createElement('button');
+    btn.className = 'choice-btn';
+    btn.textContent = c;
+    btn.onclick = () => handleAnswer(c, w.answer);
+    area.appendChild(btn);
+  });
+}
+
+function handleAnswer(chosen, answer) {
+  if (answered) return;
+  answered = true;
+  document.querySelectorAll('.choice-btn').forEach(btn => {
+    btn.onclick = null;
+    if (btn.textContent === answer) btn.classList.add('show-answer');
+    if (btn.textContent === chosen && chosen !== answer) btn.classList.add('wrong');
+    if (btn.textContent === chosen && chosen === answer) { btn.classList.add('correct'); score++; }
+  });
+  setTimeout(() => { quizIdx++; renderQuiz(); }, 1200);
+}
+
+function showScore() {
+  document.getElementById('quizArea').style.display = 'none';
+  document.getElementById('scoreArea').style.display = 'block';
+  const pct = Math.round(score / words.length * 100);
+  document.getElementById('scoreNum').textContent = `${score} / ${words.length}`;
+  document.getElementById('scoreSub').textContent = `正確率 ${pct}%`;
+  document.getElementById('scoreEmoji').textContent = pct >= 80 ? '🎉' : pct >= 50 ? '💪' : '📖';
+  document.getElementById('progressFill').style.width = '100%';
+}
+
+function restartQuiz() {
+  quizIdx = 0; score = 0;
+  document.getElementById('quizArea').style.display = 'block';
+  document.getElementById('scoreArea').style.display = 'none';
+  renderQuiz();
+}
+
+renderStudy();
+</script>
+</body>
+</html>
