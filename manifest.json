@@ -1,0 +1,14 @@
+{
+  "name": "今日の日本語単語",
+  "short_name": "日本語",
+  "description": "每日 N2 日語單字學習",
+  "start_url": "/japanese-vocab/",
+  "scope": "/japanese-vocab/",
+  "display": "standalone",
+  "background_color": "#f5f5f7",
+  "theme_color": "#4CAF50",
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ]
+}
