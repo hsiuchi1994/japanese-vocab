@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>今日の日本語単語 2026/05/31</title>
+<title>今日の日本語単語 2026/06/01</title>
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#4CAF50">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -74,13 +74,25 @@
   .score-num { font-size: 48px; font-weight: 900; color: #4CAF50; margin-bottom: 4px; }
   .score-sub { font-size: 15px; color: #888; margin-bottom: 32px; }
   .restart-btn { background: #4CAF50; color: #fff; border: none; border-radius: 14px; padding: 16px 40px; font-size: 16px; font-weight: 600; cursor: pointer; }
+
+  /* Calendar */
+  .cal-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+  .cal-month { font-size: 17px; font-weight: 700; color: #1a1a1a; }
+  .cal-nav { background: none; border: none; font-size: 22px; color: #555; cursor: pointer; padding: 4px 12px; }
+  .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; text-align: center; }
+  .cal-dow { font-size: 11px; color: #aaa; font-weight: 600; padding: 6px 0; }
+  .cal-day { font-size: 14px; padding: 9px 0; border-radius: 50%; }
+  .cal-day.today { background: #e8f5e9; font-weight: 700; color: #2E7D32; }
+  .cal-day.done { background: #4CAF50; color: #fff; font-weight: 700; }
+  .cal-day.empty { visibility: hidden; }
+  .cal-streak { font-size: 13px; color: #888; margin-top: 16px; text-align: center; }
 </style>
 </head>
 <body>
 
 <div class="header">
   <div class="header-top">
-    <span class="date">2026/05/31（日曜日）</span>
+    <span class="date">2026/06/01（月曜日）</span>
     <span class="title">📚 今日の単語</span>
     <a href="archive.html" style="font-size:13px;color:#4CAF50;text-decoration:none;">單字庫</a>
   </div>
@@ -88,6 +100,7 @@
   <div class="mode-tabs">
     <div class="tab active" id="tabStudy" onclick="switchMode('study')">學習模式</div>
     <div class="tab" id="tabQuiz" onclick="switchMode('quiz')">測驗模式</div>
+    <div class="tab" id="tabCal" onclick="switchMode('calendar')">行事曆</div>
   </div>
 </div>
 
@@ -143,8 +156,20 @@
   </div>
 </div>
 
+<div class="content" id="calContent" style="display:none">
+  <div style="background:#fff; border-radius:20px; padding:24px; box-shadow:0 2px 12px rgba(0,0,0,0.06);">
+    <div class="cal-header">
+      <button class="cal-nav" onclick="changeMonth(-1)">‹</button>
+      <span class="cal-month" id="calMonthLabel"></span>
+      <button class="cal-nav" onclick="changeMonth(1)">›</button>
+    </div>
+    <div class="cal-grid" id="calGrid"></div>
+    <div class="cal-streak" id="calStreak"></div>
+  </div>
+</div>
+
 <script>
-const words = [{"kanji": "罪", "reading": "つみ", "pos": "名", "meaning": "罪", "sentences": ["罪を犯す（犯罪）"], "related": ["▸ 同字根：犯罪 （はんざい）（犯罪）"], "choices": ["えんとつ", "つれ", "つみ", "つよみ"], "answer": "つみ"}, {"kanji": "積み重ね", "reading": "つみかさね", "pos": "名", "meaning": "積累", "sentences": ["積み重ねが大切だ（積累很重要）"], "related": ["▸ 同字根：体積 （たいせき）（體積）", "▸ 同字根：面積 （めんせき）（面積）", "▸ 同字根：積極的な （せっきょくてきな）（積極的）"], "choices": ["うみぞい", "あと", "つみかさね", "つり"], "answer": "つみかさね"}, {"kanji": "艶", "reading": "つや", "pos": "名", "meaning": "光澤", "sentences": ["艶が大切だ（光澤很重要）"], "related": [], "choices": ["つみ", "うらぐち", "えんとつ", "つや"], "answer": "つや"}, {"kanji": "強み", "reading": "つよみ", "pos": "名", "meaning": "強項", "sentences": ["強みが大切だ（強項很重要）"], "related": ["▸ 同字根：強盗 （ごうとう）（強盜）", "▸ 同字根：力強い （ちからづよい）（強有力的）", "▸ 同字根：強力な （きょうりょくな）（強有力的）"], "choices": ["えんやす", "つっこむ", "うらぐち", "つよみ"], "answer": "つよみ"}, {"kanji": "釣り", "reading": "つり", "pos": "名", "meaning": "釣魚", "sentences": ["釣りに気をつける（注意釣魚）"], "related": ["▸ 同字根：釣り合う （つりあう）（平衡）"], "choices": ["いっち", "つり", "えんぜつ", "つる"], "answer": "つり"}, {"kanji": "連れ", "reading": "つれ", "pos": "名", "meaning": "同伴", "sentences": ["よい連れがある（有個好伴兒）"], "related": ["▸ 同字根：連合 （れんごう）（聯合）"], "choices": ["いずみ", "おうべい", "つれ", "うちあわせ"], "answer": "つれ"}, {"kanji": "手当（て）", "reading": "てあて", "pos": "名", "meaning": "津貼", "sentences": ["出張手当（出差津貼）"], "related": ["▸ 同字根：得手 （えて）（拿手）", "▸ 同字根：手帳 （てちょう）（筆記本）", "▸ 同字根：手作り （てづくり）（手工製作）"], "choices": ["てま", "てあて", "あてな", "いんたい"], "answer": "てあて"}, {"kanji": "定価", "reading": "ていか", "pos": "名", "meaning": "定價", "sentences": ["定価が必要だ（需要定價）"], "related": ["▸ 同字根：肯定 （こうてい）（肯定）", "▸ 同字根：定規 （じょうぎ）（規尺）", "▸ 同字根：所定 （しょてい）（指定）"], "choices": ["いっち", "いじょう", "うみぞい", "ていか"], "answer": "ていか"}, {"kanji": "定休日", "reading": "ていきゅうび", "pos": "名", "meaning": "定期休息日", "sentences": ["定休日を理解する（理解定期休息日）"], "related": ["▸ 同字根：肯定 （こうてい）（肯定）", "▸ 同字根：定規 （じょうぎ）（規尺）", "▸ 同字根：所定 （しょてい）（指定）"], "choices": ["おうだん", "えんとつ", "いじ", "ていきゅうび"], "answer": "ていきゅうび"}, {"kanji": "抵抗", "reading": "ていこう", "pos": "名·自サ", "meaning": "抵抗；電阻", "sentences": ["抵抗することが大切だ（抵抗很重要）"], "related": ["▸ 同字根：反抗 （はんこう）（反抗）"], "choices": ["ていこう", "てんけん", "えんだか", "てつ"], "answer": "ていこう"}, {"kanji": "停止", "reading": "ていし", "pos": "名·自他サ", "meaning": "停止", "sentences": ["停止することが大切だ（停止很重要）"], "related": ["▸ 同字根：引き止める （ひきとめる）（挽留）", "▸ 同字根：止す （よす）（停止）"], "choices": ["ていし", "いっすい", "てんじょう", "えて"], "answer": "ていし"}, {"kanji": "適用", "reading": "てきよう", "pos": "名·他サ", "meaning": "適用", "sentences": ["適用することが大切だ（適用很重要）"], "related": ["▸ 同字根：適する （てきする）（適合）", "▸ 同字根：適切な （てきせつな）（確切的）", "▸ 同字根：適度な （てきどな）（適度的）"], "choices": ["てきよう", "ていし", "うらぐち", "えんしゅう"], "answer": "てきよう"}, {"kanji": "弟子", "reading": "でし", "pos": "名", "meaning": "弟子", "sentences": ["弟子になる（當徒弟）"], "related": ["▸ 複合：弟子入 （い） り（拜師）"], "choices": ["がい", "うわき", "えいきゅう", "でし"], "answer": "でし"}, {"kanji": "手帳", "reading": "てちょう", "pos": "名", "meaning": "筆記本", "sentences": ["手帳を理解する（理解筆記本）"], "related": ["▸ 同字根：得手 （えて）（拿手）", "▸ 同字根：手当（て） （てあて）（津貼）", "▸ 同字根：手作り （てづくり）（手工製作）"], "choices": ["てつづき", "うらみ", "てちょう", "うわき"], "answer": "てちょう"}, {"kanji": "鉄", "reading": "てつ", "pos": "名", "meaning": "鐵", "sentences": ["鉄が大切だ（鐵很重要）"], "related": ["▸ 同字根：鉄橋 （てっきょう）（鐵橋）", "▸ 同字根：鉄砲 （てっぽう）（步槍）"], "choices": ["てつ", "てあて", "えんぎ", "いんりょく"], "answer": "てつ"}, {"kanji": "哲学", "reading": "てつがく", "pos": "名", "meaning": "哲學", "sentences": ["哲学を感じる（感受到哲學）"], "related": ["▸ 同字根：学年 （がくねん）（學年）", "▸ 同字根：学会 （がっかい）（學會）", "▸ 同字根：学級 （がっきゅう）（學級）"], "choices": ["あと", "いっか", "てつがく", "いっしゅん"], "answer": "てつがく"}, {"kanji": "鉄橋", "reading": "てっきょう", "pos": "名", "meaning": "鐵橋", "sentences": ["鉄橋を感じる（感受到鐵橋）"], "related": ["▸ 同字根：鉄 （てつ）（鐵）", "▸ 同字根：鉄砲 （てっぽう）（步槍）"], "choices": ["てつづき", "てっきょう", "いっか", "いふく"], "answer": "てっきょう"}, {"kanji": "手作り", "reading": "てづくり", "pos": "名", "meaning": "手工製作", "sentences": ["手作りの酒（家釀的酒）"], "related": ["▸ 同字根：得手 （えて）（拿手）", "▸ 同字根：手当（て） （てあて）（津貼）", "▸ 同字根：手帳 （てちょう）（筆記本）"], "choices": ["えいきょう", "てづくり", "うみぞい", "えんしゅう"], "answer": "てづくり"}];
+const words = [{"kanji": "手続き", "reading": "てつづき", "pos": "名", "meaning": "手續", "sentences": ["手続きをすませる（辦好手續）"], "related": ["▸ 同字根：得手 （えて）（拿手）", "▸ 同字根：手当（て） （てあて）（津貼）", "▸ 同字根：手帳 （てちょう）（筆記本）"], "choices": ["いど", "えいきゅう", "てつづき", "あらすじ"], "answer": "てつづき"}, {"kanji": "徹底", "reading": "てってい", "pos": "名·自サ", "meaning": "徹底；貫徹", "sentences": ["徹底することが大切だ（徹底很重要）"], "related": ["▸ 同字根：徹夜 （てつや）（熬夜）"], "choices": ["おうふく", "ていきゅうび", "てってい", "えんぎ"], "answer": "てってい"}, {"kanji": "鉄砲", "reading": "てっぽう", "pos": "名", "meaning": "步槍", "sentences": ["鉄砲を向ける（舉槍瞄準）"], "related": ["▸ 同字根：鉄 （てつ）（鐵）", "▸ 同字根：鉄橋 （てっきょう）（鐵橋）"], "choices": ["えのぐ", "いんよう", "てっぽう", "いじょう"], "answer": "てっぽう"}, {"kanji": "徹夜", "reading": "てつや", "pos": "名·自サ", "meaning": "熬夜", "sentences": ["徹夜で勉強する（熬夜學習）"], "related": ["▸ 同字根：徹底 （てってい）（徹底）", "▸ 同字根：深夜 （しんや）（深夜）", "▸ 同字根：夜空 （よぞら）（夜空）"], "choices": ["いどう", "てきせつな", "てんすう", "てつや"], "answer": "てつや"}, {"kanji": "手間", "reading": "てま", "pos": "名", "meaning": "勞力和時間", "sentences": ["手間がかかる（費事）"], "related": ["▸ 同字根：得手 （えて）（拿手）", "▸ 同字根：手当（て） （てあて）（津貼）", "▸ 同字根：手帳 （てちょう）（筆記本）"], "choices": ["てま", "いっすい", "あやまり", "あかじ"], "answer": "てま"}, {"kanji": "点検", "reading": "てんけん", "pos": "名·他サ", "meaning": "逐一檢查", "sentences": ["点検を受ける（接受檢查）"], "related": ["▸ 同字根：焦点 （しょうてん）（焦點）", "▸ 同字根：地点 （ちてん）（地點）", "▸ 同字根：頂点 （ちょうてん）（頂點）"], "choices": ["てっきょう", "てきかくな", "い", "てんけん"], "answer": "てんけん"}, {"kanji": "天候", "reading": "てんこう", "pos": "名", "meaning": "天氣", "sentences": ["天候に気をつける（注意天氣）"], "related": ["▸ 同字根：悪天候 （あくてんこう）（壞天氣）", "▸ 同字根：天井 （てんじょう）（天花板）", "▸ 同字根：気候 （きこう）（氣候）"], "choices": ["てきせつな", "あん", "てんこう", "えんぜつ"], "answer": "てんこう"}, {"kanji": "電子", "reading": "でんし", "pos": "名", "meaning": "電子", "sentences": ["電子が必要だ（需要電子）"], "related": ["▸ 同字根：乾電池 （かんでんち）（乾電池）", "▸ 同字根：電卓 （でんたく）（臺式計算器）", "▸ 同字根：電池 （でんち）（電池）"], "choices": ["でんし", "でくわす", "うむ", "あっしゅく"], "answer": "でんし"}, {"kanji": "天井", "reading": "てんじょう", "pos": "名", "meaning": "天花板", "sentences": ["天井を理解する（理解天花板）"], "related": ["▸ 同字根：悪天候 （あくてんこう）（壞天氣）", "▸ 同字根：天候 （てんこう）（天氣）", "▸ 同字根：井戸 （いど）（井）"], "choices": ["てんすう", "あくてんこう", "てんじょう", "てらす"], "answer": "てんじょう"}, {"kanji": "転職", "reading": "てんしょく", "pos": "名·自サ", "meaning": "轉業，改行", "sentences": ["転職することが大切だ（轉業很重要）"], "related": ["▸ 同字根：移転 （いてん）（遷移）", "▸ 同字根：回転 （かいてん）（轉）", "▸ 同字根：職人 （しょくにん）（工匠）"], "choices": ["ていこう", "うむ", "あらし", "てんしょく"], "answer": "てんしょく"}, {"kanji": "点数", "reading": "てんすう", "pos": "名", "meaning": "分數", "sentences": ["点数について考える（思考分數）"], "related": ["▸ 同字根：焦点 （しょうてん）（焦點）", "▸ 同字根：地点 （ちてん）（地點）", "▸ 同字根：頂点 （ちょうてん）（頂點）"], "choices": ["えんぜつ", "てきせつな", "てんすう", "てつ"], "answer": "てんすう"}, {"kanji": "電卓", "reading": "でんたく", "pos": "名", "meaning": "臺式計算器", "sentences": ["電卓が必要だ（需要臺式計算器）"], "related": ["▸ 同字根：乾電池 （かんでんち）（乾電池）", "▸ 同字根：電子 （でんし）（電子）", "▸ 同字根：電池 （でんち）（電池）"], "choices": ["でんたく", "あけがた", "おうべい", "いじ"], "answer": "でんたく"}, {"kanji": "電池", "reading": "でんち", "pos": "名", "meaning": "電池", "sentences": ["電池について考える（思考電池）"], "related": ["▸ 同字根：乾電池 （かんでんち）（乾電池）", "▸ 同字根：電子 （でんし）（電子）", "▸ 同字根：電卓 （でんたく）（臺式計算器）"], "choices": ["あけがた", "いっしゅん", "あかり", "でんち"], "answer": "でんち"}, {"kanji": "添付", "reading": "てんぷ", "pos": "名·他サ", "meaning": "附上", "sentences": ["写真を添付する（附上照片）"], "related": ["▸ 同字根：寄付 （きふ）（捐獻）", "▸ 同字根：納付 （のうふ）（繳納）", "▸ 同字根：付近 （ふきん）（附近）"], "choices": ["いしょくじゅう", "あらすじ", "えんだか", "てんぷ"], "answer": "てんぷ"}, {"kanji": "店舗", "reading": "てんぽ", "pos": "名", "meaning": "店鋪", "sentences": ["店舗を感じる（感受到店鋪）"], "related": ["▸ 同字根：開店 （かいてん）（開業）"], "choices": ["てんぽ", "えんやす", "うみぞい", "おうせつ"], "answer": "てんぽ"}, {"kanji": "電流", "reading": "でんりゅう", "pos": "名", "meaning": "電流", "sentences": ["電流について考える（思考電流）"], "related": ["▸ 複合：電流計 （けい）（電流表）"], "choices": ["えんしゅう", "えきたい", "でんりゅう", "いんたい"], "answer": "でんりゅう"}, {"kanji": "電力", "reading": "でんりょく", "pos": "名", "meaning": "電力，電", "sentences": ["電力を理解する（理解電力）"], "related": ["▸ 複合：電力料金 （りょうきん）（電費）"], "choices": ["いんたい", "でんりょく", "うれゆき", "でんし"], "answer": "でんりょく"}, {"kanji": "統一", "reading": "とういつ", "pos": "名·他サ", "meaning": "統一；集中", "sentences": ["思想を統一する（統一思想）"], "related": ["▸ 同字根：一家 （いっか）（一家）", "▸ 同字根：一種 （いっしゅ）（一種）", "▸ 同字根：一瞬 （いっしゅん）（一瞬間）"], "choices": ["とういつ", "えいきゅう", "あらすじ", "とがる"], "answer": "とういつ"}];
 let studyIdx = 0;
 let quizIdx = 0;
 let score = 0;
@@ -155,9 +180,12 @@ function switchMode(m) {
   mode = m;
   document.getElementById('studyContent').style.display = m === 'study' ? 'block' : 'none';
   document.getElementById('quizContent').style.display = m === 'quiz' ? 'block' : 'none';
+  document.getElementById('calContent').style.display = m === 'calendar' ? 'block' : 'none';
   document.getElementById('tabStudy').className = 'tab' + (m === 'study' ? ' active' : '');
   document.getElementById('tabQuiz').className = 'tab' + (m === 'quiz' ? ' active' : '');
+  document.getElementById('tabCal').className = 'tab' + (m === 'calendar' ? ' active' : '');
   if (m === 'quiz') renderQuiz();
+  if (m === 'calendar') renderCalendar();
 }
 
 function updateProgress(idx, total) {
@@ -255,6 +283,9 @@ function showScore() {
   document.getElementById('scoreSub').textContent = `正確率 ${pct}%`;
   document.getElementById('scoreEmoji').textContent = pct >= 80 ? '🎉' : pct >= 50 ? '💪' : '📖';
   document.getElementById('progressFill').style.width = '100%';
+  const today = new Date().toLocaleDateString('sv-SE', {timeZone: 'Asia/Tokyo'});
+  const dates = JSON.parse(localStorage.getItem('quizDates') || '[]');
+  if (!dates.includes(today)) { dates.push(today); localStorage.setItem('quizDates', JSON.stringify(dates)); }
 }
 
 function restartQuiz() {
@@ -262,6 +293,45 @@ function restartQuiz() {
   document.getElementById('quizArea').style.display = 'block';
   document.getElementById('scoreArea').style.display = 'none';
   renderQuiz();
+}
+
+let calYear = new Date().getFullYear();
+let calMonth = new Date().getMonth();
+
+function changeMonth(delta) {
+  calMonth += delta;
+  if (calMonth > 11) { calMonth = 0; calYear++; }
+  if (calMonth < 0) { calMonth = 11; calYear--; }
+  renderCalendar();
+}
+
+function renderCalendar() {
+  const dates = new Set(JSON.parse(localStorage.getItem('quizDates') || '[]'));
+  const todayStr = new Date().toLocaleDateString('sv-SE', {timeZone: 'Asia/Tokyo'});
+  const monthNames = ['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'];
+  document.getElementById('calMonthLabel').textContent = `${calYear}年 ${monthNames[calMonth]}`;
+
+  const firstDay = new Date(calYear, calMonth, 1).getDay();
+  const daysInMonth = new Date(calYear, calMonth + 1, 0).getDate();
+  const dows = ['日','一','二','三','四','五','六'];
+  let html = dows.map(d => `<div class="cal-dow">${d}</div>`).join('');
+  for (let i = 0; i < firstDay; i++) html += '<div class="cal-day empty"></div>';
+  for (let d = 1; d <= daysInMonth; d++) {
+    const ds = `${calYear}-${String(calMonth+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    let cls = 'cal-day';
+    if (dates.has(ds)) cls += ' done';
+    else if (ds === todayStr) cls += ' today';
+    html += `<div class="${cls}">${d}</div>`;
+  }
+  document.getElementById('calGrid').innerHTML = html;
+
+  let streak = 0;
+  const check = new Date(todayStr);
+  while (dates.has(check.toLocaleDateString('sv-SE', {timeZone: 'Asia/Tokyo'}))) {
+    streak++;
+    check.setDate(check.getDate() - 1);
+  }
+  document.getElementById('calStreak').textContent = `連續 ${streak} 天・累計完成 ${dates.size} 次`;
 }
 
 renderStudy();
